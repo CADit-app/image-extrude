@@ -1,0 +1,20 @@
+{
+  "name": "Image Extrude",
+  "description": "Extrude 3D shapes from SVG or bitmap images. Supports both tracing (for raster images) and sampling (for SVGs). Perfect for creating custom 3D prints from logos, icons, or artwork.",
+  "entryPoint": "src/main.ts",
+  "tags": ["image", "svg", "trace", "extrude", "3d-printing", "logo"],
+  "category": "Tools",
+  "license": {
+    "type": "MIT"
+  },
+  "author": {
+    "name": "CADit"
+  },
+  "images": [
+    {
+      "path": "images/preview.png",
+      "alt": "Image Extrude Preview",
+      "isPrimary": true
+    }
+  ]
+}
