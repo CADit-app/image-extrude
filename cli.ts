@@ -13,6 +13,7 @@
 import { writeFileSync, readFileSync, existsSync } from 'fs';
 import { resolve, extname, basename } from 'path';
 import { parseArgs } from 'util';
+import type { ImageExtrudeParams } from './src/params';
 
 const SUPPORTED_FORMATS = ['.glb', '.3mf'] as const;
 type OutputFormat = typeof SUPPORTED_FORMATS[number];
@@ -75,10 +76,9 @@ async function main() {
   console.log('Generating image extrusion...');
   
   // Build params from defaults and CLI options
-  type ParamKey = keyof typeof imageExtrudeParamsSchema;
-  const defaultParams: Record<string, unknown> = {};
+  const defaultParams: Partial<ImageExtrudeParams> = {};
   for (const [key, param] of Object.entries(imageExtrudeParamsSchema)) {
-    defaultParams[key] = (param as { default: unknown }).default;
+    (defaultParams as any)[key] = (param as { default: unknown }).default;
   }
   
   // Load default image from images folder if no image specified
@@ -125,7 +125,7 @@ async function main() {
   });
   
   // Generate the model
-  const result = await imageExtrudeMaker(defaultParams);
+  const result = await imageExtrudeMaker(defaultParams as any);
   
   if (ext === '.glb') {
     // Export as GLB
