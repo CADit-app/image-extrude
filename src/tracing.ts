@@ -1,10 +1,12 @@
 /**
  * Image tracing and SVG sampling utilities
+ * 
+ * Uses potrace-js for browser-compatible bitmap tracing.
  */
 
 import { svgToPolygons } from '@cadit-app/svg-sampler';
 import { CrossSection } from '@cadit-app/manifold-3d/manifoldCAD';
-import { Potrace } from 'potrace';
+import { traceUrl, getSVG } from 'potrace-js';
 import { svgDataUrlToString } from './utils';
 import { centerCrossSection } from './crossSectionUtils';
 
@@ -65,6 +67,7 @@ export const sampleSvg = async (svgDataUrl: string, maxWidth?: number): Promise<
 
 /**
  * Traces a bitmap image and returns a centered CrossSection
+ * Uses potrace-js for browser-compatible tracing.
  */
 export const traceImage = async (
   imageDataUrl: string,
@@ -73,22 +76,18 @@ export const traceImage = async (
     despeckleSize?: number;
   }
 ): Promise<CrossSection> => {
-  const tracer = new Potrace({
-    turdSize: options.despeckleSize || 2,
-  });
+  // potrace-js options
+  const traceOptions = {
+    turdsize: options.despeckleSize || 2,
+  };
 
-  // Promisify tracer.loadImage
-  await new Promise<void>((resolve, reject) => {
-    tracer.loadImage(imageDataUrl, (_potrace, err) => {
-      if (err) {
-        reject(err);
-      } else {
-        resolve();
-      }
-    });
-  });
-
-  const svgContent = tracer.getSVG();
+  // traceUrl works with data URLs as well
+  const pathList = await traceUrl(imageDataUrl, traceOptions);
+  
+  // Get SVG content from the traced paths
+  // getSVG(pathList, size, type) - we use size=1 to get normalized coordinates
+  const svgContent = getSVG(pathList, 1);
+  
   const crossSection = await svgStringToCrossSection(svgContent, options.maxWidth);
   return centerCrossSection(crossSection);
 };

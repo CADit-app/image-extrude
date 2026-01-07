@@ -18,8 +18,8 @@ export interface ImageFileValue {
   fileName?: string;
 }
 
-// Default SVG - a simple star shape
-const defaultSvgDataUrl = 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48cG9seWdvbiBwb2ludHM9IjUwLDUgNjEsMzkgOTcsMzkgNjgsMjIgNzksOTUgNTAsNzAgMjEsOTUgMzIsNjIgMywzOSAzOSwzOSIgZmlsbD0iYmxhY2siLz48L3N2Zz4=';
+// Default image - CookieCAD logo from GitHub via jsdelivr CDN
+const defaultImageUrl = 'https://cdn.jsdelivr.net/gh/CADit-app/image-extrude@master/images/cookiecad-logo-dark.svg';
 
 export const imageExtrudeParamsSchema = {
   mode: {
@@ -35,10 +35,10 @@ export const imageExtrudeParamsSchema = {
     type: 'image' as const,
     label: 'Image File',
     default: {
-      imageUrl: '',
-      dataUrl: defaultSvgDataUrl,
+      imageUrl: defaultImageUrl,
+      dataUrl: '',
       fileType: 'image/svg+xml',
-      fileName: 'star.svg'
+      fileName: 'cookiecad-logo-dark.svg'
     } as ImageFileValue,
   },
   height: {
