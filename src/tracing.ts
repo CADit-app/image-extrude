@@ -79,7 +79,7 @@ export const traceImage = async (
 
   // Promisify tracer.loadImage
   await new Promise<void>((resolve, reject) => {
-    tracer.loadImage(imageDataUrl, (err: Error | null) => {
+    tracer.loadImage(imageDataUrl, (_potrace, err) => {
       if (err) {
         reject(err);
       } else {

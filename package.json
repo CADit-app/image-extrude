@@ -1,12 +1,14 @@
 {
   "name": "@cadit-app/image-extrude",
-  "version": "0.1.0",
+  "version": "0.1.2",
   "description": "Image Extrude for CADit - Extrude shapes from SVG or bitmap images",
   "type": "module",
-  "main": "src/main.ts",
+  "main": "dist/src/main.js",
+  "types": "dist/src/main.d.ts",
   "scripts": {
     "typecheck": "tsc --noEmit",
     "build": "tsc",
+    "prepublishOnly": "npm run build",
     "generate": "npx tsx cli.ts",
     "build:glb": "npx tsx cli.ts output.glb",
     "build:3mf": "npx tsx cli.ts output.3mf"
@@ -15,6 +17,7 @@
     "@cadit-app/script-params": "0.4.1",
     "@cadit-app/svg-sampler": "^0.1.0",
     "@resvg/resvg-wasm": "^2.6.2",
+    "@types/potrace": "^2.1.5",
     "potrace": "^2.1.8"
   },
   "peerDependencies": {
@@ -41,6 +44,7 @@
   },
   "license": "MIT",
   "files": [
+    "dist/**/*",
     "src/**/*",
     "images/**/*",
     "cadit.json",
