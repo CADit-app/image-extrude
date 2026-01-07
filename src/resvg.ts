@@ -1,34 +1,44 @@
 /**
  * SVG to bitmap rendering using resvg-wasm
+ * 
+ * Note: When running as a dynamically loaded script in CADit, the WASM module
+ * is loaded from esm.sh CDN since Vite's ?url import syntax isn't available.
  */
 
 import * as resvg from '@resvg/resvg-wasm';
 import { svgDataUrlToString } from './utils';
 
+// Hardcoded version for WASM URL - update when upgrading @resvg/resvg-wasm dependency
+const RESVG_VERSION = '2.6.2';
+
 let wasmInitialized = false;
+let wasmInitPromise: Promise<void> | null = null;
 
 /**
- * Initialize resvg WASM module
- * In CLI context, we need to load from file system
- * In browser context (via bundler), the WASM is loaded differently
+ * Initialize resvg WASM module.
+ * Fetches the WASM binary from esm.sh CDN to work in dynamically loaded scripts.
+ * 
+ * Safe to call multiple times - subsequent calls return immediately.
+ * If initialization fails, subsequent calls will retry.
  */
-async function initializeResvgWasm() {
+async function initializeResvgWasm(): Promise<void> {
   if (wasmInitialized) return;
-  
-  // For CLI usage, load WASM from node_modules
-  const { readFile } = await import('fs/promises');
-  const { resolve, dirname } = await import('path');
-  const { fileURLToPath } = await import('url');
-  
-  // Find the wasm file in node_modules
-  const wasmPath = resolve(
-    dirname(fileURLToPath(import.meta.url)),
-    '../node_modules/@resvg/resvg-wasm/index_bg.wasm'
-  );
-  
-  const wasmBuffer = await readFile(wasmPath);
-  await resvg.initWasm(wasmBuffer);
-  wasmInitialized = true;
+  if (wasmInitPromise) return wasmInitPromise;
+
+  wasmInitPromise = (async () => {
+    try {
+      // Fetch WASM from esm.sh CDN
+      const wasmUrl = `https://esm.sh/@resvg/resvg-wasm@${RESVG_VERSION}/index_bg.wasm`;
+      await resvg.initWasm(fetch(wasmUrl));
+      wasmInitialized = true;
+    } catch (error) {
+      // Reset promise so retry is possible
+      wasmInitPromise = null;
+      throw error;
+    }
+  })();
+
+  return wasmInitPromise;
 }
 
 /**
@@ -55,9 +65,15 @@ export const renderSvgToBitmapDataUrl = async (
 
   const resvgInstance = new resvg.Resvg(svgString, opts);
   const pngData = resvgInstance.render();
-  const pngBuffer = pngData.asPng();
+  const pngBuffer = pngData.asPng(); // Uint8Array
 
-  // Convert to data URL
-  const base64 = Buffer.from(pngBuffer).toString('base64');
-  return `data:image/png;base64,${base64}`;
+  // Convert Uint8Array to proper ArrayBuffer for Blob
+  const arrayBuffer = pngBuffer.buffer.slice(
+    pngBuffer.byteOffset,
+    pngBuffer.byteOffset + pngBuffer.byteLength
+  ) as ArrayBuffer;
+
+  // Return blob URL (browser-compatible and more efficient)
+  const blob = new Blob([arrayBuffer], { type: 'image/png' });
+  return URL.createObjectURL(blob);
 };
