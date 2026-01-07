@@ -94,6 +94,24 @@ const manifold = crossSection.extrude(5);
 | `maxWidth` | `number` | Maximum width in mm |
 | `despeckleSize` | `number` | Remove spots smaller than this (trace only) |
 
+## Build & Bundle
+
+This package ships as a **pre-bundled** ES module for browser use.
+
+### Why we bundle
+
+CADit's script runtime uses esbuild to bundle external scripts at runtime, fetching dependencies from CDN (esm.sh). Some dependencies like `potrace` (which uses `jimp` for image processing) don't work correctly when fetched from CDN due to complex browser shims.
+
+By pre-bundling at publish time, we ensure:
+- All dependencies are resolved correctly at build time
+- The bundle works reliably in CADit's browser environment
+- No CDN resolution issues at runtime
+
+### Exports
+
+- **Default** (`@cadit-app/image-extrude`): Pre-bundled version for CADit/browser use
+- **Unbundled** (`@cadit-app/image-extrude/unbundled`): TypeScript-compiled modules for Node.js/CLI use
+
 ## License
 
 MIT
