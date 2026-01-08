@@ -1,6 +1,6 @@
 {
   "name": "@cadit-app/image-extrude",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "description": "Image Extrude for CADit - Extrude shapes from SVG or bitmap images",
   "type": "module",
   "main": "dist/bundle.js",
@@ -14,6 +14,9 @@
       "import": "./dist/src/main.js",
       "types": "./dist/src/main.d.ts"
     }
+  },
+  "cadit": {
+    "browserBundle": "./dist/bundle.js"
   },
   "scripts": {
     "typecheck": "tsc --noEmit",
@@ -59,7 +62,6 @@
   "license": "MIT",
   "files": [
     "dist/**/*",
-    "src/**/*",
     "images/**/*",
     "cadit.json",
     "README.md"
