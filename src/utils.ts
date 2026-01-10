@@ -53,3 +53,20 @@ export async function fetchImageAsDataUrl(imageUrl: string): Promise<string> {
     reader.readAsDataURL(blob);
   });
 }
+
+/**
+ * Ensure SVG has the required xmlns attribute.
+ * Many SVG files (especially from vector editors) omit this, but resvg requires it.
+ */
+export function ensureSvgNamespace(svgString: string): string {
+  // Check if xmlns is already present
+  if (svgString.includes('xmlns=')) {
+    return svgString;
+  }
+  
+  // Add xmlns to the opening <svg> tag
+  return svgString.replace(
+    /<svg\s/i,
+    '<svg xmlns="http://www.w3.org/2000/svg" '
+  );
+}

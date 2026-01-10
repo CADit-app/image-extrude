@@ -1,13 +1,12 @@
 /**
  * Image tracing and SVG sampling utilities
  * 
- * Uses potrace for bitmap tracing. When running in CADit, potrace is exposed
- * as an importable library by the code.worker, which handles the jimp dependency.
+ * Uses @cadit-app/potrace-ts for bitmap tracing. Works in browsers and Web Workers.
  */
 
 import { svgToPolygons } from '@cadit-app/svg-sampler';
 import { CrossSection } from '@cadit-app/manifold-3d/manifoldCAD';
-import { Potrace } from 'potrace';
+import { traceDataUrl, getSVG, THRESHOLD_AUTO } from '@cadit-app/potrace-ts';
 import { svgDataUrlToString } from './utils';
 import { centerCrossSection } from './crossSectionUtils';
 
@@ -67,32 +66,44 @@ export const sampleSvg = async (svgDataUrl: string, maxWidth?: number): Promise<
 };
 
 /**
- * Traces a bitmap image and returns a centered CrossSection
- * Uses potrace with jimp for image loading (works in web workers).
+ * Traces a bitmap image and returns a centered CrossSection.
+ * Uses @cadit-app/potrace-ts with automatic threshold (Otsu's method).
+ * 
+ * Transparent pixels are blended with white background before processing,
+ * matching the behavior of the original node-potrace library.
  */
 export const traceImage = async (
   imageDataUrl: string,
   options: {
     maxWidth?: number;
     despeckleSize?: number;
-  }
+    threshold?: number;
+    /** 
+     * Invert the tracing (for light content on dark backgrounds).
+     * Default is false (trace dark pixels on light/transparent background).
+     */
+    invert?: boolean;
+  } = {}
 ): Promise<CrossSection> => {
-  const tracer = new Potrace({
-    turdSize: options.despeckleSize || 2,
+  // Use potrace-ts traceDataUrl which handles decoding, auto-threshold, and tracing
+  const paths = traceDataUrl(imageDataUrl, {
+    threshold: options.threshold ?? THRESHOLD_AUTO,
+    invert: options.invert,
+    turnpolicy: 'black',
+    turdsize: options.despeckleSize ?? 2,
+    optcurve: true,
+    alphamax: 1,
+    opttolerance: 0.2
   });
 
-  // Promisify tracer.loadImage
-  await new Promise<void>((resolve, reject) => {
-    tracer.loadImage(imageDataUrl, (_potrace, err) => {
-      if (err) {
-        reject(err);
-      } else {
-        resolve();
-      }
-    });
-  });
+  if (paths.length === 0) {
+    throw new Error('Potrace produced no paths. Check threshold or image contrast.');
+  }
 
-  const svgContent = tracer.getSVG();
+  // Generate SVG from traced paths
+  const svgContent = getSVG(paths, 1);
+
+  // Convert SVG to CrossSection
   const crossSection = await svgStringToCrossSection(svgContent, options.maxWidth);
   return centerCrossSection(crossSection);
 };

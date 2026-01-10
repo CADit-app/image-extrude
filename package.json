@@ -1,38 +1,30 @@
 {
   "name": "@cadit-app/image-extrude",
-  "version": "0.3.3",
+  "version": "0.4.2",
   "description": "Image Extrude for CADit - Extrude shapes from SVG or bitmap images",
   "type": "module",
-  "main": "dist/bundle.js",
+  "main": "dist/src/main.js",
   "types": "dist/src/main.d.ts",
   "exports": {
     ".": {
-      "import": "./dist/bundle.js",
-      "types": "./dist/src/main.d.ts"
-    },
-    "./unbundled": {
       "import": "./dist/src/main.js",
       "types": "./dist/src/main.d.ts"
     }
   },
-  "cadit": {
-    "browserBundle": "./dist/bundle.js"
-  },
   "scripts": {
     "typecheck": "tsc --noEmit",
     "build:types": "tsc",
-    "build:bundle": "vite build",
-    "build": "npm run build:types && npm run build:bundle",
+    "build": "npm run build:types",
     "prepublishOnly": "npm run build",
     "generate": "npx tsx cli.ts",
     "build:glb": "npx tsx cli.ts output.glb",
     "build:3mf": "npx tsx cli.ts output.3mf"
   },
   "dependencies": {
+    "@cadit-app/potrace-ts": "^1.2.0",
     "@cadit-app/script-params": "0.4.1",
     "@cadit-app/svg-sampler": "^0.1.0",
-    "@resvg/resvg-wasm": "^2.6.2",
-    "potrace": "^2.1.8"
+    "@resvg/resvg-wasm": "^2.6.2"
   },
   "peerDependencies": {
     "@cadit-app/manifold-3d": "^3.0.0"
@@ -42,12 +34,9 @@
     "@gltf-transform/core": "^4.1.1",
     "@jscadui/3mf-export": "^0.5.0",
     "@types/node": "^25.0.3",
-    "@types/potrace": "^2.1.5",
-    "esbuild": "^0.24.0",
     "fflate": "^0.8.2",
     "tsx": "^4.0.0",
-    "typescript": "^5.0.0",
-    "vite": "^7.3.1"
+    "typescript": "^5.0.0"
   },
   "keywords": [
     "cadit",

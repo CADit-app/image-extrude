@@ -59,6 +59,18 @@ export const imageExtrudeParamsSchema = {
     default: 2,
     min: 0.1,
   },
+  threshold: {
+    type: 'number' as const,
+    label: 'Threshold (0 = auto, 1-255)',
+    default: 0,
+    min: 0,
+    max: 255,
+  },
+  invert: {
+    type: 'switch' as const,
+    label: 'Invert (for light-on-dark images)',
+    default: false,
+  },
 };
 
 export type ImageExtrudeParams = {
@@ -67,4 +79,6 @@ export type ImageExtrudeParams = {
   height: number;
   maxWidth: number;
   despeckleSize: number;
+  threshold: number;
+  invert: boolean;
 };

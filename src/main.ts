@@ -61,7 +61,9 @@ export default defineParams({
 
         crossSection = await traceImage(dataUrl, {
           maxWidth: typedParams.maxWidth,
-          despeckleSize: typedParams.despeckleSize
+          despeckleSize: typedParams.despeckleSize,
+          threshold: typedParams.threshold || undefined, // 0 means auto
+          invert: typedParams.invert
         });
       } else {
         // mode is 'sample', and fileType is guaranteed to be svg+xml
