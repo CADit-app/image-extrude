@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       '@cadit-app/potrace-ts':
-        specifier: ^1.2.0
-        version: 1.2.0
+        specifier: ^1.3.0
+        version: 1.3.0
       '@cadit-app/script-params':
         specifier: 0.4.1
         version: 0.4.1
@@ -49,8 +49,8 @@ packages:
     resolution: {integrity: sha512-GVrcmRbp11EbT/LM02SCNzyPJM+S3ts6e8ss/Du6qbl2oGLxwM9sulm9NQUk2VkQqeMCieRmejMOm9hgjEMJ7w==}
     hasBin: true
 
-  '@cadit-app/potrace-ts@1.2.0':
-    resolution: {integrity: sha512-ZXM7T4VZSdtmETXQWuVE2hMDkpZEzUzrX8ISAk7NHcFuuwXv+JNlgayJDHO4OBm7ronLiJRz5djb/rxOE0ODvw==}
+  '@cadit-app/potrace-ts@1.3.0':
+    resolution: {integrity: sha512-q+Ak5oWTvA2QkibhBr+AgDmgorjfssL+5730bkC0Ty2QBxk3lceLKcCHIt9Z75ls+aPxmeyyJXN5sYOHPmBQjw==}
 
   '@cadit-app/script-params@0.4.1':
     resolution: {integrity: sha512-2bzHWjRkgjzZWmljYcZ8NijwMZfeOjfWQK8eQTqz+uJUABb0SlMsJju59GP2BRorFET3AW+wcVtYnDkqkP6D8Q==}
@@ -538,7 +538,7 @@ snapshots:
       magic-string: 0.30.21
       url-or-path: 2.6.1
 
-  '@cadit-app/potrace-ts@1.2.0':
+  '@cadit-app/potrace-ts@1.3.0':
     dependencies:
       jpeg-js: 0.4.4
       upng-js: 2.1.0
