@@ -10,10 +10,7 @@ Extrude 3D shapes from SVG or bitmap images. Supports both tracing (for raster i
 - **Sample mode**: High-fidelity conversion of SVG files to 3D
 - **Configurable size**: Set maximum width to control output dimensions
 - **Despeckle**: Remove small artifacts during tracing
-- **CLI support**: Generate GLB and 3MF files from command line (SVG sample mode)
-
-> **Note:** Trace mode for bitmap images currently only works in the browser (CADit). 
-> The CLI only supports SVG files with sample mode.
+- **CLI support**: Generate GLB and 3MF files from command line
 
 ## Installation
 
@@ -25,12 +22,12 @@ npm install @cadit-app/image-extrude
 
 ### As a CADit Script
 
-Import this script in [CADit](https://cadit.app) by adding the GitHub repository URL.
+Open this script in [CADit](https://cadit.app/design/ohQ58mpwMpdX5qC) and edit parameters inside the browser.
 
 ### CLI Usage
 
 ```bash
-# Generate GLB from default star shape
+# Generate GLB from default Cookiecad logo
 npx tsx cli.ts output.glb
 
 # Generate from a specific image
@@ -44,7 +41,7 @@ npx tsx cli.ts output.3mf --image=photo.png --mode=trace
 
 | Option | Description | Default |
 |--------|-------------|---------|
-| `--image=<path>` | Path to image file (SVG, PNG, JPG) | Built-in star |
+| `--image=<path>` | Path to image file (SVG, PNG, JPG) | Built-in Cookiecad logo |
 | `--height=<mm>` | Extrusion height in mm | 1 |
 | `--maxWidth=<mm>` | Maximum width in mm | 50 |
 | `--mode=<trace\|sample>` | Processing mode | trace |
@@ -55,7 +52,7 @@ npx tsx cli.ts output.3mf --image=photo.png --mode=trace
 ```typescript
 import imageExtrude from '@cadit-app/image-extrude';
 
-// Use the defineParams API
+// Use the defineParams API - returns 2D shapes (SceneOutput)
 const result = await imageExtrude.main({
   mode: 'trace',
   imageFile: {
@@ -65,8 +62,13 @@ const result = await imageExtrude.main({
   },
   height: 2,
   maxWidth: 50,
-  despeckleSize: 2
+  despeckleSize: 2,
+  threshold: 0,
+  invert: false
 });
+
+// result is a SceneOutput containing polygon shapes
+console.log(result.objects); // Array of polygon shapes with holes
 ```
 
 ### Creating CrossSections for Embedding
@@ -80,7 +82,7 @@ const crossSection = await makeCrossSection({
   maxWidth: 30
 });
 
-// Use in your own maker
+// Use in your own maker - extrude to get a Manifold
 const manifold = crossSection.extrude(5);
 ```
 
@@ -93,24 +95,6 @@ const manifold = crossSection.extrude(5);
 | `height` | `number` | Extrusion height in mm |
 | `maxWidth` | `number` | Maximum width in mm |
 | `despeckleSize` | `number` | Remove spots smaller than this (trace only) |
-
-## Build & Bundle
-
-This package ships as a **pre-bundled** ES module for browser use.
-
-### Why we bundle
-
-CADit's script runtime uses esbuild to bundle external scripts at runtime, fetching dependencies from CDN (esm.sh). Some dependencies like `potrace` (which uses `jimp` for image processing) don't work correctly when fetched from CDN due to complex browser shims.
-
-By pre-bundling at publish time, we ensure:
-- All dependencies are resolved correctly at build time
-- The bundle works reliably in CADit's browser environment
-- No CDN resolution issues at runtime
-
-### Exports
-
-- **Default** (`@cadit-app/image-extrude`): Pre-bundled version for CADit/browser use
-- **Unbundled** (`@cadit-app/image-extrude/unbundled`): TypeScript-compiled modules for Node.js/CLI use
 
 ## License
 

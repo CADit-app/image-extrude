@@ -12,8 +12,8 @@ importers:
         specifier: ^1.3.0
         version: 1.3.0
       '@cadit-app/script-params':
-        specifier: 0.4.1
-        version: 0.4.1
+        specifier: ^0.5.4
+        version: 0.5.4
       '@cadit-app/svg-sampler':
         specifier: ^0.1.0
         version: 0.1.0
@@ -52,8 +52,8 @@ packages:
   '@cadit-app/potrace-ts@1.3.0':
     resolution: {integrity: sha512-q+Ak5oWTvA2QkibhBr+AgDmgorjfssL+5730bkC0Ty2QBxk3lceLKcCHIt9Z75ls+aPxmeyyJXN5sYOHPmBQjw==}
 
-  '@cadit-app/script-params@0.4.1':
-    resolution: {integrity: sha512-2bzHWjRkgjzZWmljYcZ8NijwMZfeOjfWQK8eQTqz+uJUABb0SlMsJju59GP2BRorFET3AW+wcVtYnDkqkP6D8Q==}
+  '@cadit-app/script-params@0.5.4':
+    resolution: {integrity: sha512-r+7MX7lby7hzqZG3Vdbm40udV4v40wH3Yp7OY/KkXoFOcrFfZ9g/5EzXowW67V4Uh7OR1AWLVYMK6CWRmiOeaw==}
 
   '@cadit-app/svg-sampler@0.1.0':
     resolution: {integrity: sha512-j8pdVShsW3Dph80OK/D+UypOyQZ4Z1xoqD12w1F9sJWyQDbLdvO7aMVrLWHzy7TUZSp7UwgnPUSfnpiXMjXPYA==}
@@ -543,7 +543,7 @@ snapshots:
       jpeg-js: 0.4.4
       upng-js: 2.1.0
 
-  '@cadit-app/script-params@0.4.1': {}
+  '@cadit-app/script-params@0.5.4': {}
 
   '@cadit-app/svg-sampler@0.1.0':
     dependencies:

@@ -69,8 +69,8 @@ async function main() {
   const manifold = await import('@cadit-app/manifold-3d');
   await manifold.default();
   
-  // Now import the maker
-  const { default: imageExtrudeMaker } = await import('./src/main');
+  // Now import the cross section maker for CLI (we need a Manifold for mesh export)
+  const { makeCrossSection } = await import('./src/makeCrossSection');
   const { imageExtrudeParamsSchema } = await import('./src/params');
   
   console.log('Generating image extrusion...');
@@ -124,8 +124,16 @@ async function main() {
     hasImage: !!(defaultParams.imageFile as any)?.dataUrl
   });
   
-  // Generate the model
-  const result = await imageExtrudeMaker(defaultParams as any);
+  // Generate the cross section using makeCrossSection (returns CrossSection for mesh export)
+  const crossSection = await makeCrossSection({
+    imageFile: defaultParams.imageFile!,
+    mode: defaultParams.mode!,
+    maxWidth: defaultParams.maxWidth,
+    despeckleSize: defaultParams.despeckleSize,
+  });
+  
+  // Extrude to get a Manifold for mesh export
+  const result = crossSection.extrude(defaultParams.height!);
   
   if (ext === '.glb') {
     // Export as GLB
